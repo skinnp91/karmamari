@@ -75,16 +75,15 @@ class Karmamari < SlackRubyBot::Bot
     client.say text: "Set #{karma} to #{quip}", channel: data.channel
   end
 
-  match(/(\S+)[ ]?(\+\+|--)/) do |client, data, match|
+  match(/([@\w<>]+)[ ]?(\+\+|--)/) do |client, data, match|
+    utterance = data.text
     @config ||= KarmamariConfig.new
     @users = client.web_client.users_list['members']
 
-    # data.text
-    utterance = data.text
     @users ||= client.web_client.users_list['members']
 
-    liked = utterance.downcase.scan(/(\S+)[ ]?\+\+/).flatten
-    disliked = utterance.downcase.scan(/(\S+)[ ]?--/).flatten
+    liked = utterance.downcase.scan(/([@\w<>]+)[ ]?\+\+/).flatten.reject{|e| e.size < 3}
+    disliked = utterance.downcase.scan(/([@\w<>]+)[ ]?--/).flatten.reject{|e| e.size < 3}
 
     # TODO: validate if user is allowed to mutate karma scores
     # so you can't give yourself points
