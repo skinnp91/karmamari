@@ -75,7 +75,7 @@ class Karmamari < SlackRubyBot::Bot
     client.say text: "Set #{karma} to #{quip}", channel: data.channel
   end
 
-  match(/([@\w<>]+)[ ]?(\+\+|--)/) do |client, data, match|
+  match(/([^\s]{2,}?)[ ]?(\+{2,}|-{2,})/) do |client, data, match|
     utterance = data.text
     @config ||= KarmamariConfig.new
     @users = client.web_client.users_list['members']
